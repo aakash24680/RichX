@@ -401,10 +401,21 @@ function updateCart() {
           <span class="text-xs text-gray-500">${Number(item.stock ?? 0) > 0 ? `/${Number(item.stock)} available` : ''}</span>
         </div>
       </div>
-      <div class="flex flex-col gap-2 items-end shrink-0">
-        <button class="px-3 py-1 border rounded bg-black text-white text-sm" onclick="buyNow('${item.id}')">Buy</button>
-        <button class="text-red-500 text-sm" onclick="removeItem('${item.id}')">Remove</button>
-      </div>
+      <div class="flex flex-row sm:flex-col gap-2 sm:items-end items-center justify-end shrink-0 w-full sm:w-auto">
+  <button
+    class="px-4 py-2 rounded bg-black text-white text-sm font-semibold w-1/2 sm:w-auto"
+    onclick="buyNow('${item.id}')"
+  >
+    Buy
+  </button>
+
+  <button
+    class="px-4 py-2 rounded border text-red-500 text-sm font-semibold w-1/2 sm:w-auto text-center"
+    onclick="removeItem('${item.id}')"
+  >
+    Remove
+  </button>
+</div>
     </div>
   `).join('');
 
