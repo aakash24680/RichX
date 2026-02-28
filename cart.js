@@ -375,6 +375,8 @@ function updateCart() {
 
   if (cart.length === 0) {
     cartItemsEl.innerHTML = `<p class="text-center text-gray-500 mt-10">Cart is empty</p>`;
+    // Ensure product cards / modal buttons update back to "Add to Cart"
+    emitCartChanged({ type: "render", count: 0 });
     return;
   }
 
@@ -405,6 +407,9 @@ function updateCart() {
       </div>
     </div>
   `).join('');
+
+  // Keep product cards / modal buttons in sync even if caller didn't emit
+  emitCartChanged({ type: "render", count });
 }
 window.updateCart = updateCart;
 
