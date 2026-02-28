@@ -3,11 +3,10 @@
 let products = [];
 let currentCategory = "all";
 
-const CART_KEY = "richx_cart_v1";
 
 function readCart() {
   try {
-    const raw = localStorage.getItem(CART_KEY);
+    const raw = localStorage.getItem("richx_cart_v1");
     const arr = JSON.parse(raw || "[]");
     return Array.isArray(arr) ? arr : [];
   } catch (e) {
