@@ -29,6 +29,56 @@ function hideCartAlert() {
   el.textContent = "";
 }
 
+// --- Flipkart-style toast (top-right glass) ---
+let __rxToastTimer = null;
+function ensureToastEl() {
+  let el = document.getElementById("rx-toast");
+  if (el) return el;
+
+  el = document.createElement("div");
+  el.id = "rx-toast";
+  el.style.position = "fixed";
+  el.style.top = "16px";
+  el.style.right = "16px";
+  el.style.zIndex = "9999";
+  el.style.padding = "10px 14px";
+  el.style.borderRadius = "14px";
+  el.style.border = "1px solid rgba(255,255,255,.18)";
+  el.style.background = "rgba(10,12,20,.72)";
+  el.style.backdropFilter = "blur(14px)";
+  el.style.webkitBackdropFilter = "blur(14px)";
+  el.style.boxShadow = "0 18px 50px rgba(0,0,0,.35)";
+  el.style.color = "#e6e8ee";
+  el.style.fontSize = "14px";
+  el.style.fontWeight = "700";
+  el.style.opacity = "0";
+  el.style.transform = "translateY(-8px)";
+  el.style.transition = "opacity .18s ease, transform .18s ease";
+  el.style.pointerEvents = "none";
+
+  document.body.appendChild(el);
+  return el;
+}
+function showToast(msg = "Added to cart ✅") {
+  const el = ensureToastEl();
+  el.textContent = msg;
+
+  // reset animation
+  el.style.opacity = "0";
+  el.style.transform = "translateY(-8px)";
+  // next frame show
+  requestAnimationFrame(() => {
+    el.style.opacity = "1";
+    el.style.transform = "translateY(0)";
+  });
+
+  if (__rxToastTimer) clearTimeout(__rxToastTimer);
+  __rxToastTimer = setTimeout(() => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(-8px)";
+  }, 1400);
+}
+
 function getStock(product) {
   const s = Number(product?.stock ?? product?.qtyAvailable ?? product?.quantity ?? product?.inventory);
   return Number.isFinite(s) ? s : 0;
@@ -185,6 +235,12 @@ function addToCart(product) {
       stock: stock
     });
   }
+
+  // ✅ Flipkart-style feedback
+  showToast("Added to cart ✅");
+  try {
+    window.dispatchEvent(new CustomEvent("richx-cart-changed", { detail: { type: "added", id } }));
+  } catch (e) {}
 
   saveCart();
   updateCart();

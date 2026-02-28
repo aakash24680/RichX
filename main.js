@@ -3,6 +3,64 @@
 let products = [];
 let currentCategory = "all";
 
+const CART_KEY = "richx_cart_v1";
+
+function readCart() {
+  try {
+    const raw = localStorage.getItem(CART_KEY);
+    const arr = JSON.parse(raw || "[]");
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) {
+    return [];
+  }
+}
+function isInCart(id) {
+  const cid = String(id);
+  return readCart().some(i => String(i.id) === cid);
+}
+function openCartSidebar() {
+  const sidebar = document.getElementById("cart-sidebar");
+  if (!sidebar) return;
+  // ensure OPEN (toggleCart() would close if already open)
+  if (sidebar.classList.contains("translate-x-full")) {
+    if (typeof window.toggleCart === "function") window.toggleCart();
+    else sidebar.classList.remove("translate-x-full");
+  }
+}
+function updateModalAddBtnState(p) {
+  const btn = document.getElementById("modal-add-btn");
+  if (!btn) return;
+
+  const s = getStock(p);
+  if (s <= 0) {
+    btn.disabled = true;
+    btn.classList.add("opacity-50","cursor-not-allowed");
+    btn.textContent = "Out of Stock";
+    btn.onclick = null;
+    return;
+  }
+
+  btn.disabled = false;
+  btn.classList.remove("opacity-50","cursor-not-allowed");
+
+  if (isInCart(p.id)) {
+    btn.textContent = "Go to Cart";
+    btn.onclick = () => {
+      openCartSidebar();
+      closeProductModal();
+    };
+  } else {
+    btn.textContent = "Add to Cart";
+    btn.onclick = () => {
+      addToCart(p);
+      // update UI -> Go to Cart
+      renderProducts();
+      updateModalAddBtnState(p);
+    };
+  }
+}
+
+
 // ===== Firebase readiness (prevents "products load" error on back navigation) =====
 function waitForFirebaseDB(timeoutMs = 8000, intervalMs = 50) {
   // Works even if you DIDN'T add firebase-ready event in HTML (uses polling + optional event).
@@ -137,7 +195,11 @@ function renderProducts() {
 
         <button class="mt-auto w-full bg-black text-white py-2 rounded btn-anim ${getStock(p) <= 0 ? "opacity-50 cursor-not-allowed" : ""}"
           data-add="${p.id}" ${getStock(p) <= 0 ? "disabled" : ""}>
-          ${getStock(p) <= 0 ? "Out of Stock" : "Add to Cart"}
+          ${
+            getStock(p) <= 0
+              ? "Out of Stock"
+              : (isInCart(p.id) ? "Go to Cart" : "Add to Cart")
+          }
         </button>
 
         <button class="mt-2 w-full bg-gray-100 text-black py-2 rounded btn-anim"
@@ -157,8 +219,16 @@ function renderProducts() {
 
     if (addBtn) {
       const id = addBtn.getAttribute("data-add");
+      if (isInCart(id)) {
+        openCartSidebar();
+        return;
+      }
       const p = products.find(x => String(x.id) === String(id));
-      if (p) addToCart(p);
+      if (p) {
+        addToCart(p);
+        // re-render so button becomes "Go to Cart"
+        renderProducts();
+      }
       return;
     }
 
@@ -209,15 +279,7 @@ function openProductModal(p) {
   if (stockEl) stockEl.innerHTML = stockBadgeHTML(p).replace('mt-2',''); // reuse same labels
   const modalAddBtn = document.getElementById("modal-add-btn");
   if (modalAddBtn) {
-    if (s <= 0) {
-      modalAddBtn.disabled = true;
-      modalAddBtn.classList.add("opacity-50","cursor-not-allowed");
-      modalAddBtn.textContent = "Out of Stock";
-    } else {
-      modalAddBtn.disabled = false;
-      modalAddBtn.classList.remove("opacity-50","cursor-not-allowed");
-      modalAddBtn.textContent = "Add to Cart";
-    }
+    // state handled below (Add to Cart / Go to Cart / Out of Stock)
   }
 
   document.getElementById("modal-material").textContent = p.material || "Premium";
@@ -261,9 +323,8 @@ function openProductModal(p) {
     thumbs.appendChild(t);
   });
 
-  // Add to cart button in modal
-  const modalAddBtn2 = document.getElementById("modal-add-btn");
-  if (modalAddBtn2) modalAddBtn2.onclick = () => addToCart(p);
+  // Add to cart / Go to cart button in modal
+  updateModalAddBtnState(p);
 
   modal.classList.remove("hidden");
 }
@@ -340,6 +401,15 @@ function setupScrollReveal() {
 function setupHeroLoaded() {
   window.addEventListener("load", () => document.body.classList.add("page-loaded"));
 }
+
+
+// Keep product buttons in sync when cart changes
+window.addEventListener("richx-cart-changed", () => {
+  try {
+    renderProducts();
+    if (modalProduct) updateModalAddBtnState(modalProduct);
+  } catch (e) {}
+});
 
 // ===== Init =====
 async function init() {
