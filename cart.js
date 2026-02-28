@@ -117,6 +117,13 @@ function saveCart() {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
 
+// Notify product cards / modal buttons that cart changed
+function emitCartChanged(detail = {}) {
+  try {
+    window.dispatchEvent(new CustomEvent("richx-cart-changed", { detail }));
+  } catch (e) {}
+}
+
 function toggleCart() {
   const sidebar = document.getElementById("cart-sidebar");
   if (sidebar) {
@@ -238,11 +245,8 @@ function addToCart(product) {
 
   // ✅ Flipkart-style feedback
   showToast("Added to cart ✅");
-  try {
-    window.dispatchEvent(new CustomEvent("richx-cart-changed", { detail: { type: "added", id } }));
-  } catch (e) {}
-
   saveCart();
+  emitCartChanged({ type: "added", id });
   updateCart();
 }
 window.addToCart = addToCart;
@@ -272,6 +276,7 @@ function changeQty(id, delta) {
     cart = cart.filter(i => String(i.id) !== String(id));
   }
   saveCart();
+  emitCartChanged({ type: "qty", id: String(id) });
   updateCart();
 }
 window.changeQty = changeQty;
@@ -296,6 +301,7 @@ function setQty(id, value) {
 
   item.qty = qty;
   saveCart();
+  emitCartChanged({ type: "qty", id: String(id) });
   updateCart();
 }
 window.setQty = setQty;
@@ -303,6 +309,7 @@ window.setQty = setQty;
 function removeItem(id) {
   cart = cart.filter(i => String(i.id) !== String(id));
   saveCart();
+  emitCartChanged({ type: "removed", id: String(id) });
   updateCart();
 }
 window.removeItem = removeItem;
