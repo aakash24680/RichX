@@ -386,7 +386,7 @@ function updateCart() {
       <div class="flex-1 min-w-0">
         <h4 class="font-semibold break-words">${item.name || ''}</h4>
         <p class="text-sm text-gray-600">₹${Number(item.price||0).toLocaleString("en-IN")} × ${item.qty || 0}</p>
-        <div class="flex items-center gap-2 mt-2 flex-nowrap">
+        <div class="flex flex-wrap items-center gap-2 mt-2">
           <button class="px-2 py-1 border rounded" onclick="changeQty('${item.id}', -1)">-</button>
           <input
             type="number"
@@ -398,7 +398,7 @@ function updateCart() {
             onchange="setQty('${item.id}', this.value)"
           />
           <button class="px-2 py-1 border rounded" onclick="changeQty('${item.id}', 1)">+</button>
-          <span class="text-xs text-gray-500 whitespace-nowrap shrink-0 ml-1">${Number(item.stock ?? 0) > 0 ? `/${Number(item.stock)} available` : ''}</span>
+          <span class="text-xs text-gray-500">${Number(item.stock ?? 0) > 0 ? `/${Number(item.stock)} available` : ''}</span>
         </div>
       </div>
       <div class="flex flex-row sm:flex-col gap-2 sm:items-end items-center justify-end shrink-0 w-full sm:w-auto">
