@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RichX | Delivery Address</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="bg-gray-50">
+  <header class="bg-white shadow sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold">Rich<span class="gold">X</span></a>
+      <a href="index.html" class="text-sm text-gray-700 hover:underline">← Back to Shop</a>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Address Form -->
+    <section class="bg-white rounded shadow p-6">
+      <h1 class="text-2xl font-bold mb-1">Delivery Details</h1>
+      <p class="text-gray-600 mb-6">Fill address details to place order on WhatsApp.</p>
+
+      <form id="address-form" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-semibold">Full Name *</label>
+            <input id="cust-name" class="w-full mt-1 border rounded px-3 py-2" placeholder="Your name" required />
+          </div>
+          <div>
+            <label class="text-sm font-semibold">Mobile Number *</label>
+            <input id="cust-phone" class="w-full mt-1 border rounded px-3 py-2" placeholder="10 digit mobile" inputmode="numeric" required />
+          </div>
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold">Email (optional)</label>
+          <input id="cust-email" type="email" class="w-full mt-1 border rounded px-3 py-2" placeholder="example@gmail.com" />
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold">Full Address *</label>
+          <textarea id="cust-address" class="w-full mt-1 border rounded px-3 py-2" rows="3" placeholder="House/Flat, Street, Area" required></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="text-sm font-semibold">City *</label>
+            <input id="cust-city" class="w-full mt-1 border rounded px-3 py-2" placeholder="City" required />
+          </div>
+          <div>
+            <label class="text-sm font-semibold">State *</label>
+            <input id="cust-state" class="w-full mt-1 border rounded px-3 py-2" placeholder="State" required />
+          </div>
+          <div>
+            <label class="text-sm font-semibold">Pincode *</label>
+            <input id="cust-pincode" class="w-full mt-1 border rounded px-3 py-2" placeholder="6 digit" inputmode="numeric" required />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-semibold">Landmark (optional)</label>
+            <input id="cust-landmark" class="w-full mt-1 border rounded px-3 py-2" placeholder="Near..." />
+          </div>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button type="button" id="btn-edit-cart" class="flex-1 bg-gray-100 text-black py-3 rounded btn-anim">
+            Edit Cart
+          </button>
+          <button type="button" id="btn-place" class="flex-1 bg-black text-white py-3 rounded btn-anim">
+            Place Order on WhatsApp
+          </button>
+        </div>
+
+        <p id="form-msg" class="text-sm text-red-600"></p>
+      </form>
+    </section>
+
+    <!-- Order Summary -->
+    <aside class="bg-white rounded shadow p-6">
+      <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+      <div id="order-items" class="space-y-3"></div>
+      <div class="border-t mt-5 pt-4 flex justify-between font-bold">
+        <span>Total</span>
+        <span id="order-total">₹0</span>
+      </div>
+
+      <div class="mt-4 text-xs text-gray-500">
+        After clicking "Place Order", WhatsApp will open with your full details and order list.
+      </div>
+    </aside>
+  </main>
+
+  <!-- Firebase init (module) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAa32YSDn1NIXnrEElVqMU76haD17jJM1s",
+      authDomain: "richxbackend.firebaseapp.com",
+      projectId: "richxbackend",
+      storageBucket: "richxbackend.firebasestorage.app",
+      messagingSenderId: "420980254362",
+      appId: "1:420980254362:web:25b0b1a59521d584a22123"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Expose for address.js
+    window.db = db;
+    window.fs = { doc, setDoc, serverTimestamp, runTransaction };
+  </script>
+
+  <script src="address.js?v=21"></script>
+</body>
+</html>

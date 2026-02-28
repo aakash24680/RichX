@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RichX Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="bg-gray-50">
+
+  <div class="max-w-6xl mx-auto px-4 py-6">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold">RichX <span class="text-yellow-600">Admin</span></h1>
+      <div class="flex gap-2">
+        <a href="index.html" class="px-3 py-2 rounded bg-white border">Open Site</a>
+        <button id="btn-logout" class="px-3 py-2 rounded bg-black text-white hidden">Logout</button>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="login-box" class="bg-white border rounded-xl p-6 max-w-md">
+      <h2 class="text-xl font-semibold mb-4">Admin Login</h2>
+      <label class="block text-sm mb-1">Email</label>
+      <input id="login-email" type="email" class="w-full border rounded p-2 mb-3" placeholder="admin@email.com" />
+
+      <label class="block text-sm mb-1">Password</label>
+      <input id="login-pass" type="password" class="w-full border rounded p-2 mb-4" placeholder="••••••••" />
+
+      <button id="btn-login" class="w-full bg-black text-white py-2 rounded">Login</button>
+      <p id="login-msg" class="text-sm mt-3 text-red-600"></p>
+      <p class="text-xs text-gray-500 mt-2">Note: Admin user Firebase Auth me create hona chahiye.</p>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dash" class="hidden">
+      <div class="flex gap-2 mb-4">
+        <button class="tab-btn active" data-tab="products">Products</button>
+        <button class="tab-btn" data-tab="orders">Orders</button>
+      </div>
+
+      <!-- PRODUCTS TAB -->
+      <div id="tab-products" class="tab-pane">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-white border rounded-xl p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-lg font-semibold">Add / Edit Product (Without Storage)</h2>
+              <span id="edit-badge"
+                class="hidden text-xs px-2 py-1 rounded bg-yellow-100 text-yellow-800 border border-yellow-200">
+                Editing mode
+              </span>
+            </div>
+
+            <!-- Hidden product id (edit mode) -->
+            <input id="p-id" type="hidden" value="" />
+
+            <div class="grid grid-cols-2 gap-3">
+              <div class="col-span-2">
+                <label class="text-sm">Name</label>
+                <input id="p-name" class="w-full border rounded p-2" placeholder="Product name" />
+              </div>
+
+              <div>
+                <label class="text-sm">Price (MRP)</label>
+                <input id="p-price" type="number" class="w-full border rounded p-2" placeholder="799" />
+              </div>
+
+              <div>
+                <label class="text-sm">Discount %</label>
+                <input id="p-discount" type="number" class="w-full border rounded p-2" placeholder="20" />
+              </div>
+
+              <div>
+                <label class="text-sm">Stock Qty</label>
+                <input id="p-stock" type="number" class="w-full border rounded p-2" placeholder="20" />
+                <p class="text-xs text-gray-500 mt-1">0 = Out of stock</p>
+              </div>
+
+              <div>
+                <label class="text-sm">Category</label>
+                <select id="p-category" class="w-full border rounded p-2">
+                  <option value="necklace">Necklace</option>
+                  <option value="earrings">Earrings</option>
+                  <option value="bangles">Bangles</option>
+                  <option value="bracelet">Bracelet</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="text-sm">Finish</label>
+                <input id="p-finish" class="w-full border rounded p-2" placeholder="Glossy" />
+              </div>
+
+              <div>
+                <label class="text-sm">Material</label>
+                <input id="p-material" class="w-full border rounded p-2" placeholder="Alloy" />
+              </div>
+
+              <div>
+                <label class="text-sm">Color</label>
+                <input id="p-color" class="w-full border rounded p-2" placeholder="Gold" />
+              </div>
+
+              <div class="col-span-2">
+                <label class="text-sm">Short Description</label>
+                <textarea id="p-short" class="w-full border rounded p-2" rows="3"
+                  placeholder="Premium artificial jewelry..."></textarea>
+              </div>
+
+              <div class="col-span-2">
+                <label class="text-sm">Occasion</label>
+                <input id="p-occasion" class="w-full border rounded p-2" placeholder="Party / Daily" />
+              </div>
+
+              <div class="col-span-2">
+                <label class="text-sm">Care</label>
+                <input id="p-care" class="w-full border rounded p-2" placeholder="Keep away from water/perfume" />
+              </div>
+
+              <div class="col-span-2">
+                <label class="text-sm">Images URLs (one per line)</label>
+                <textarea id="p-images-urls" class="w-full border rounded p-2" rows="5"
+                  placeholder="https://.../img1.jpg&#10;https://.../img2.jpg"></textarea>
+                <p class="text-xs text-gray-500 mt-1">Tip: Public direct https image links use karo.</p>
+              </div>
+
+              <div class="col-span-2 flex gap-2">
+                <button id="btn-save-product" class="flex-1 bg-black text-white py-2 rounded">
+                  Save Product
+                </button>
+                <button id="btn-clear" class="px-4 py-2 rounded border">Clear</button>
+              </div>
+            </div>
+
+            <p id="p-msg" class="text-sm mt-3"></p>
+          </div>
+
+          <div class="bg-white border rounded-xl p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-lg font-semibold">Products List</h2>
+              <button id="btn-refresh-products" class="px-3 py-2 rounded border bg-white">Refresh</button>
+            </div>
+
+            <div id="products-list" class="space-y-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDERS TAB -->
+      <div id="tab-orders" class="tab-pane hidden">
+        <div class="bg-white border rounded-xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-lg font-semibold">Orders</h2>
+            <button id="btn-refresh-orders" class="px-3 py-2 rounded border bg-white">Refresh</button>
+          </div>
+
+          <div id="orders-list" class="space-y-3"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="admin.js?v=2"></script>
+</body>
+</html>

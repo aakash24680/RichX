@@ -1,0 +1,26 @@
+.tab-btn{
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.tab-btn.active{
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+/* RichX Admin - Glass + Dark tweaks (works with Tailwind classes) */
+.tab-btn{
+  border: 1px solid rgba(255,255,255,.14) !important;
+  background: rgba(255,255,255,.07) !important;
+  color: #e6e8ee !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.tab-btn.active{
+  background: rgba(212,175,55,.18) !important;
+  border-color: rgba(212,175,55,.55) !important;
+  color: #ffffff !important;
+}

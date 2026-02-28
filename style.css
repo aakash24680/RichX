@@ -1,0 +1,546 @@
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+}
+h1,h2,h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+.gold { color: #D4AF37; }
+
+/* Category buttons */
+.category-btn {
+  border: 1px solid #ccc;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: #fff;
+}
+.category-btn.active {
+  background: #D4AF37;
+  color: white;
+  border-color: #D4AF37;
+}
+
+/* Cart count badge */
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: red;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cart sidebar */
+.cart-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 360px;
+
+  height: 100vh;   /* fallback */
+  height: 100dvh;  /* mobile fix */
+
+  background: white;
+  box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s;
+  z-index: 100;
+}
+@media (max-width: 480px) {
+  .cart-sidebar { width: 100%; }
+}
+
+/* ========== ANIMATIONS ========== */
+img { transition: transform .35s ease, filter .35s ease; }
+
+/* hero load animation */
+body:not(.page-loaded) .hero-anim {
+  opacity: 0;
+  transform: translateY(16px);
+}
+body.page-loaded .hero-anim {
+  opacity: 1;
+  transform: translateY(0);
+  transition: .7s ease;
+}
+
+/* scroll reveal */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .55s ease, transform .55s ease;
+  will-change: transform, opacity;
+}
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* product card hover premium feel */
+.product-card {
+  transition: transform .28s ease, box-shadow .28s ease;
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,.12);
+}
+.product-card:hover img {
+  transform: scale(1.06);
+  filter: saturate(1.05);
+}
+
+/* button micro animation */
+.btn-anim {
+  transition: transform .18s ease, opacity .18s ease;
+}
+.btn-anim:hover { transform: translateY(-2px); }
+.btn-anim:active { transform: translateY(0); opacity: .9; }
+
+/* ========== PRODUCT MODAL ========== */
+.hidden{ display:none !important; }
+
+.modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  z-index: 200;
+}
+.modal-box{
+  width: min(980px, 100%);
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,.25);
+}
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+}
+.modal-title{
+  font-weight: 700;
+  font-size: 18px;
+}
+.modal-close{
+  border: 1px solid #eee;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+}
+
+.modal-content{
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 16px;
+  padding: 16px;
+}
+@media (max-width: 860px){
+  .modal-content{ grid-template-columns: 1fr; }
+}
+
+.modal-image-wrap{
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  background: #fafafa;
+}
+.modal-main-image{
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display:block;
+}
+@media (max-width: 860px){
+  .modal-main-image{ height: 320px; }
+}
+
+.nav-btn{
+  position:absolute;
+  top:50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,.9);
+  border: 1px solid #eee;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.nav-btn.left{ left: 10px; }
+.nav-btn.right{ right: 10px; }
+
+.modal-thumbs{
+  margin-top: 10px;
+  display:flex;
+  gap: 10px;
+  overflow:auto;
+  padding-bottom: 6px;
+}
+.modal-thumbs img{
+  width: 74px;
+  height: 74px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor:pointer;
+}
+.modal-thumbs img.active{
+  border-color: #D4AF37;
+}
+
+.modal-right{
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+
+.modal-price-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+}
+.modal-final-price{
+  font-size: 22px;
+  font-weight: 800;
+  color: #D4AF37;
+}
+.modal-mrp{
+  font-size: 13px;
+  color: #777;
+}
+.modal-mrp span:first-child{
+  text-decoration: line-through;
+  margin-right: 8px;
+  color:#999;
+}
+.modal-discount{
+  color:#e11d48;
+  font-weight: 700;
+}
+
+.modal-add-btn{
+  background:#111;
+  color:#fff;
+  padding: 10px 14px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.modal-short{
+  color:#444;
+  line-height: 1.5;
+}
+
+.modal-specs{
+  border: 1px solid #eee;
+  border-radius: 14px;
+  padding: 12px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+.spec-row{
+  display:flex;
+  justify-content:space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+.spec-row span{ color:#666; }
+
+.modal-whatsapp{
+  margin-top: 6px;
+  border: 1px solid #25D366;
+  color:#0b3d1c;
+  background:#eafff1;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+/* ===== Shimmer Loader (Modal Image) ===== */
+.shimmer-wrap{
+  position: relative;
+}
+
+.shimmer{
+  position: absolute;
+  inset: 0;
+  background: #f3f4f6;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.shimmer::before{
+  content:"";
+  position: absolute;
+  top:0; left:-60%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent);
+  animation: shimmerMove 1.1s infinite;
+}
+
+@keyframes shimmerMove{
+  0% { transform: translateX(0); }
+  100% { transform: translateX(200%); }
+}
+
+/* Hide shimmer when image is ready */
+.shimmer.hidden{
+  display: none !important;
+}
+/* ===== Mobile modal fix: full visible + close always visible ===== */
+
+/* keep modal inside viewport */
+.modal-overlay{
+  padding: 10px;
+  align-items: flex-start;      /* top se start so it never cuts */
+  overflow-y: auto;             /* overlay can scroll if needed */
+}
+
+/* modal height cap + scroll */
+.modal-box{
+  max-height: calc(100dvh - 20px);
+  width: min(980px, 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+/* header sticky so close button always visible */
+.modal-header{
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 5;
+}
+
+/* body/content scrollable inside modal */
+.modal-content{
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: calc(100dvh - 80px); /* header space adjust */
+}
+
+/* make image shorter on small screens */
+@media (max-width: 860px){
+  .modal-main-image{ height: 260px; }
+}
+
+/* extra small phones */
+@media (max-width: 420px){
+  .modal-main-image{ height: 220px; }
+  .modal-close{ width: 34px; height: 34px; border-radius: 10px; }
+}
+
+/* Stock label in modal */
+.modal-stock{font-size:13px;margin-top:8px;}
+
+
+
+/* --- Cart sidebar overflow fixes --- */
+#cart-items { overflow-x: hidden; }
+#cart-items * { max-width: 100%; box-sizing: border-box; }
+.cart-sidebar { max-width: 100vw; }
+
+/* =========================================================
+   RichX Glass + Dark Theme (global overrides)
+   - Works with existing Tailwind utility classes in HTML
+   - No HTML changes required
+   ========================================================= */
+
+:root{
+  --rx-bg0: #05070d;
+  --rx-bg1: #0b1020;
+  --rx-card: rgba(255,255,255,.08);
+  --rx-card-strong: rgba(255,255,255,.12);
+  --rx-border: rgba(255,255,255,.14);
+  --rx-border-soft: rgba(255,255,255,.10);
+  --rx-text: #e6e8ee;
+  --rx-muted: #a9afbd;
+  --rx-muted2:#8d93a3;
+  --rx-shadow: 0 18px 60px rgba(0,0,0,.55);
+  --rx-shadow-soft: 0 12px 40px rgba(0,0,0,.35);
+  --rx-gold: #D4AF37;
+  --rx-focus: rgba(212,175,55,.45);
+}
+
+/* Page background + base text */
+body, body.bg-gray-50{
+  background:
+    radial-gradient(1200px 600px at 20% 5%, rgba(212,175,55,.18), transparent 60%),
+    radial-gradient(900px 520px at 90% 0%, rgba(56,189,248,.12), transparent 55%),
+    radial-gradient(900px 520px at 60% 110%, rgba(99,102,241,.12), transparent 55%),
+    linear-gradient(180deg, var(--rx-bg1), var(--rx-bg0));
+  color: var(--rx-text);
+}
+
+/* links */
+a{ color: inherit; }
+a:hover{ color: var(--rx-gold); }
+
+/* Gold accent stays */
+.gold{ color: var(--rx-gold) !important; }
+
+/* Utility text colors used in your HTML */
+.text-gray-400{ color: var(--rx-muted2) !important; }
+.text-gray-500{ color: var(--rx-muted2) !important; }
+.text-gray-600{ color: var(--rx-muted) !important; }
+.text-gray-700{ color: #c8cddd !important; }
+.text-gray-800{ color: #d6daea !important; }
+.text-gray-900{ color: var(--rx-text) !important; }
+
+/* Section backgrounds used in HTML */
+.bg-gray-100{ background: transparent !important; }
+.bg-gray-200{ background: rgba(255,255,255,.10) !important; }
+.bg-gray-900{ background: rgba(0,0,0,.55) !important; } /* footer */
+.bg-white{
+  background: var(--rx-card) !important;
+  border-color: var(--rx-border-soft) !important;
+  color: var(--rx-text) !important;
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Borders (Tailwind uses border + border-b + border-t) */
+.border, .border-b, .border-t{
+  border-color: var(--rx-border-soft) !important;
+}
+
+/* Shadows */
+.shadow, .shadow-lg, .shadow-md, .shadow-xl{
+  box-shadow: var(--rx-shadow-soft) !important;
+}
+
+/* Cards hover premium but in dark */
+.product-card{
+  background: var(--rx-card) !important;
+  border: 1px solid var(--rx-border-soft);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.product-card:hover{
+  box-shadow: var(--rx-shadow) !important;
+}
+
+/* Category buttons -> glass pills */
+.category-btn{
+  background: rgba(255,255,255,.07) !important;
+  border: 1px solid var(--rx-border-soft) !important;
+  color: var(--rx-text) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.category-btn.active{
+  background: rgba(212,175,55,.18) !important;
+  border-color: rgba(212,175,55,.55) !important;
+  color: #fff !important;
+}
+
+/* Generic buttons */
+.bg-black{
+  background: linear-gradient(180deg, rgba(20,24,36,.92), rgba(8,10,18,.92)) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+}
+.bg-black:hover{
+  border-color: rgba(212,175,55,.35) !important;
+  box-shadow: 0 12px 36px rgba(0,0,0,.35);
+}
+
+/* Secondary button look */
+.bg-gray-100{
+  background: rgba(255,255,255,.08) !important;
+  border: 1px solid var(--rx-border-soft) !important;
+  color: var(--rx-text) !important;
+}
+
+/* Inputs / selects / textareas */
+input, textarea, select{
+  background: rgba(0,0,0,.28) !important;
+  color: var(--rx-text) !important;
+  border-color: var(--rx-border-soft) !important;
+}
+input::placeholder, textarea::placeholder{
+  color: rgba(169,175,189,.65) !important;
+}
+input:focus, textarea:focus, select:focus{
+  outline: none !important;
+  border-color: rgba(212,175,55,.55) !important;
+  box-shadow: 0 0 0 3px var(--rx-focus) !important;
+}
+
+/* Cart sidebar glass */
+.cart-sidebar{
+  background: rgba(10,12,20,.70) !important;
+  border-left: 1px solid var(--rx-border-soft);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+#cart-items p, #cart-items span, #cart-items div{ color: inherit; }
+
+/* Modal becomes glass */
+.modal-overlay{ background: rgba(0,0,0,.68) !important; }
+.modal-box{
+  background: var(--rx-card-strong) !important;
+  border: 1px solid var(--rx-border-soft);
+  box-shadow: var(--rx-shadow) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.modal-header{
+  background: rgba(12,14,22,.82) !important;
+  border-bottom-color: var(--rx-border-soft) !important;
+}
+.modal-image-wrap{
+  background: rgba(255,255,255,.06) !important;
+  border-color: var(--rx-border-soft) !important;
+}
+.nav-btn{
+  background: rgba(0,0,0,.45) !important;
+  color: #fff !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+.modal-close{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.12) !important;
+  color: var(--rx-text);
+}
+.modal-short{ color: #cfd4e5 !important; }
+.modal-specs{
+  background: rgba(0,0,0,.20);
+  border-color: rgba(255,255,255,.10) !important;
+}
+.spec-row span{ color: var(--rx-muted) !important; }
+
+/* WhatsApp enquire button in modal */
+.modal-whatsapp{
+  background: rgba(37,211,102,.10) !important;
+  border-color: rgba(37,211,102,.45) !important;
+  color: #d9ffe8 !important;
+}
+
+/* Shimmer in dark */
+.shimmer{ background: rgba(255,255,255,.06) !important; }
+.shimmer::before{
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent) !important;
+}

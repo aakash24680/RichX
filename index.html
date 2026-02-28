@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RichX | Premium Artificial Jewelry</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="bg-gray-50">
+
+  <!-- HEADER -->
+  <header class="bg-white shadow sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <h1 class="text-3xl font-bold">Rich<span class="gold">X</span></h1>
+
+      <button onclick="toggleCart()" class="relative btn-anim">
+        <i class="fas fa-shopping-bag text-xl"></i>
+        <span id="cart-count" class="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="relative h-[450px] flex items-center justify-center text-white">
+    <img
+      src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=1600"
+      class="absolute inset-0 w-full h-full object-cover"
+      alt="hero"
+    />
+    <div class="absolute inset-0 bg-black/50"></div>
+
+    <div class="relative text-center hero-anim">
+      <h2 class="text-5xl font-bold mb-4">Because You Deserve Luxury</h2>
+      <p class="text-xl">Premium Artificial Jewelry</p>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="max-w-7xl mx-auto px-4 py-10">
+    <div class="flex flex-wrap justify-center gap-4 mb-8">
+      <button onclick="filterProducts('all', this)" class="category-btn active btn-anim">All</button>
+      <button onclick="filterProducts('necklace', this)" class="category-btn btn-anim">Necklaces</button>
+      <button onclick="filterProducts('earrings', this)" class="category-btn btn-anim">Earrings</button>
+      <button onclick="filterProducts('bangles', this)" class="category-btn btn-anim">Bangles</button>
+      <button onclick="filterProducts('bracelet', this)" class="category-btn btn-anim">Bracelets</button>
+    </div>
+
+    <!-- PRODUCT GRID -->
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="bg-white py-10">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-3 gap-6 text-center">
+      <div class="animate-on-scroll">
+        <i class="fas fa-shipping-fast text-3xl gold mb-3"></i>
+        <h3 class="font-semibold">Free Shipping</h3>
+        <p class="text-gray-600 text-sm">On orders above ₹499</p>
+      </div>
+      <div class="animate-on-scroll">
+        <i class="fas fa-gem text-3xl gold mb-3"></i>
+        <h3 class="font-semibold">Premium Quality</h3>
+        <p class="text-gray-600 text-sm">Long lasting jewelry</p>
+      </div>
+      <div class="animate-on-scroll">
+        <i class="fas fa-headset text-3xl gold mb-3"></i>
+        <h3 class="font-semibold">24/7 Support</h3>
+        <p class="text-gray-600 text-sm">Call or WhatsApp</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="py-14 bg-gray-100">
+    <h2 class="text-3xl font-bold text-center mb-10 animate-on-scroll">
+      Get in Touch with <span class="gold">RichX</span>
+    </h2>
+
+    <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-6 text-center">
+      <div class="bg-white p-6 rounded shadow animate-on-scroll">
+        <i class="fas fa-envelope text-3xl gold mb-3"></i>
+        <p>support@richxjewels.com</p>
+      </div>
+      <div class="bg-white p-6 rounded shadow animate-on-scroll">
+        <i class="fas fa-map-marker-alt text-3xl gold mb-3"></i>
+        <p>New Delhi, India</p>
+      </div>
+      <div class="bg-white p-6 rounded shadow animate-on-scroll">
+        <i class="fas fa-phone text-3xl gold mb-3"></i>
+        <p>+91 9518832695</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-white py-8 text-center">
+    <h3 class="text-2xl font-bold mb-2">Rich<span class="gold">X</span></h3>
+    <p class="text-gray-400 mb-4">Premium Artificial Jewelry</p>
+
+    <div class="flex justify-center gap-4 text-xl">
+      <a href="#" class="hover:text-pink-500"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="hover:text-blue-500"><i class="fab fa-facebook"></i></a>
+      <a href="https://wa.me/919518832695" class="hover:text-green-500">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+    </div>
+
+    <p class="text-gray-500 text-sm mt-4">© 2026 RichX. All Rights Reserved.</p>
+  </footer>
+
+  <!-- CART SIDEBAR -->
+  <div id="cart-sidebar" class="cart-sidebar translate-x-full">
+    <div class="flex justify-between items-center p-4 border-b">
+      <h2 class="text-xl font-bold">Your Cart</h2>
+      <button onclick="toggleCart()">✖</button>
+    </div>
+
+    <!-- stock / cart sync alerts -->
+    <div id="cart-alert" class="hidden px-4 py-2 text-sm"></div>
+
+    <div id="cart-items" class="p-4 flex-1 overflow-y-auto">
+      <p class="text-center text-gray-500 mt-10">Cart is empty</p>
+    </div>
+
+    <div class="p-4 border-t">
+
+      <!-- Free shipping progress -->
+      <div id="free-ship-box" class="mb-3">
+        <div class="flex justify-between text-sm mb-1">
+          <span id="free-ship-text">Add ₹0 more for FREE shipping</span>
+          <span id="free-ship-status" class="font-semibold"></span>
+        </div>
+        <div class="w-full h-2 bg-gray-200 rounded">
+          <div id="free-ship-bar" class="h-2 bg-green-500 rounded" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="flex justify-between text-sm mb-1">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">₹0</span>
+      </div>
+
+      <div class="flex justify-between text-sm mb-3">
+        <span>Shipping</span>
+        <span id="cart-shipping">₹0</span>
+      </div>
+
+      <div class="flex justify-between font-bold mb-4">
+        <span>Total</span>
+        <span id="cart-total">₹0</span>
+      </div>
+      <button onclick="checkout()" class="w-full bg-black text-white py-3 rounded btn-anim">
+        Order via WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAILS MODAL -->
+  <div id="product-modal" class="modal-overlay hidden" onclick="closeProductModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modal-title" class="modal-title"></h3>
+        <button class="modal-close btn-anim" onclick="closeProductModal()">✖</button>
+      </div>
+
+      <div class="modal-content">
+        <!-- LEFT: Images -->
+        <div class="modal-left">
+          <div class="modal-image-wrap shimmer-wrap">
+            <div id="modal-shimmer" class="shimmer"></div>
+            <button class="nav-btn left btn-anim" onclick="prevSlide()">‹</button>
+            <img id="modal-main-image" class="modal-main-image" src="" alt="product">
+            <button class="nav-btn right btn-anim" onclick="nextSlide()">›</button>
+          </div>
+
+          <div id="modal-thumbs" class="modal-thumbs"></div>
+        </div>
+
+        <!-- RIGHT: Details -->
+        <div class="modal-right">
+          <div class="modal-price-row">
+            <div>
+              <div id="modal-final-price" class="modal-final-price"></div>
+              <div class="modal-mrp">
+                <span id="modal-mrp"></span>
+                <span id="modal-discount" class="modal-discount"></span>
+              </div>
+            </div>
+
+            <button id="modal-add-btn" class="modal-add-btn btn-anim">
+              Add to Cart
+            </button>
+          </div>
+
+          <div id="modal-stock" class="modal-stock"></div>
+
+          <p id="modal-short" class="modal-short"></p>
+
+          <div class="modal-specs">
+            <div class="spec-row"><span>Material</span><b id="modal-material"></b></div>
+            <div class="spec-row"><span>Finish</span><b id="modal-finish"></b></div>
+            <div class="spec-row"><span>Color</span><b id="modal-color"></b></div>
+            <div class="spec-row"><span>Occasion</span><b id="modal-occasion"></b></div>
+            <div class="spec-row"><span>Care</span><b id="modal-care"></b></div>
+          </div>
+
+          <button class="modal-whatsapp btn-anim" onclick="enquireOnWhatsApp()">
+            Enquire on WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHATSAPP FLOAT -->
+  <a href="https://wa.me/919518832695"
+     class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg btn-anim">
+    <i class="fab fa-whatsapp text-2xl"></i>
+  </a>
+
+  <!-- Firebase init (module) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAa32YSDn1NIXnrEElVqMU76haD17jJM1s",
+      authDomain: "richxbackend.firebaseapp.com",
+      projectId: "richxbackend",
+      storageBucket: "richxbackend.firebasestorage.app",
+      messagingSenderId: "420980254362",
+      appId: "1:420980254362:web:25b0b1a59521d584a22123",
+      measurementId: "G-DRRF90JL9T"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    window.firebaseApp = app;
+    window.auth = getAuth(app);
+    window.db = getFirestore(app);
+    window.dispatchEvent(new Event("firebase-ready"));
+
+    try { window.analytics = getAnalytics(app); } catch (e) {}
+  </script>
+
+  <script src="cart.js?v=2"></script>
+  <script src="main.js?v=2"></script>
+</body>
+</html>
