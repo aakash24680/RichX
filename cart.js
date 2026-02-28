@@ -29,6 +29,56 @@ function hideCartAlert() {
   el.textContent = "";
 }
 
+// --- Flipkart-style toast (top-right glass) ---
+let __rxToastTimer = null;
+function ensureToastEl() {
+  let el = document.getElementById("rx-toast");
+  if (el) return el;
+
+  el = document.createElement("div");
+  el.id = "rx-toast";
+  el.style.position = "fixed";
+  el.style.top = "16px";
+  el.style.right = "16px";
+  el.style.zIndex = "9999";
+  el.style.padding = "10px 14px";
+  el.style.borderRadius = "14px";
+  el.style.border = "1px solid rgba(255,255,255,.18)";
+  el.style.background = "rgba(10,12,20,.72)";
+  el.style.backdropFilter = "blur(14px)";
+  el.style.webkitBackdropFilter = "blur(14px)";
+  el.style.boxShadow = "0 18px 50px rgba(0,0,0,.35)";
+  el.style.color = "#e6e8ee";
+  el.style.fontSize = "14px";
+  el.style.fontWeight = "700";
+  el.style.opacity = "0";
+  el.style.transform = "translateY(-8px)";
+  el.style.transition = "opacity .18s ease, transform .18s ease";
+  el.style.pointerEvents = "none";
+
+  document.body.appendChild(el);
+  return el;
+}
+function showToast(msg = "Added to cart ✅") {
+  const el = ensureToastEl();
+  el.textContent = msg;
+
+  // reset animation
+  el.style.opacity = "0";
+  el.style.transform = "translateY(-8px)";
+  // next frame show
+  requestAnimationFrame(() => {
+    el.style.opacity = "1";
+    el.style.transform = "translateY(0)";
+  });
+
+  if (__rxToastTimer) clearTimeout(__rxToastTimer);
+  __rxToastTimer = setTimeout(() => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(-8px)";
+  }, 1400);
+}
+
 function getStock(product) {
   const s = Number(product?.stock ?? product?.qtyAvailable ?? product?.quantity ?? product?.inventory);
   return Number.isFinite(s) ? s : 0;
@@ -65,6 +115,13 @@ normalizeCart();
 
 function saveCart() {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
+
+// Notify product cards / modal buttons that cart changed
+function emitCartChanged(detail = {}) {
+  try {
+    window.dispatchEvent(new CustomEvent("richx-cart-changed", { detail }));
+  } catch (e) {}
 }
 
 function toggleCart() {
@@ -186,7 +243,10 @@ function addToCart(product) {
     });
   }
 
+  // ✅ Flipkart-style feedback
+  showToast("Added to cart ✅");
   saveCart();
+  emitCartChanged({ type: "added", id });
   updateCart();
 }
 window.addToCart = addToCart;
@@ -216,6 +276,7 @@ function changeQty(id, delta) {
     cart = cart.filter(i => String(i.id) !== String(id));
   }
   saveCart();
+  emitCartChanged({ type: "qty", id: String(id) });
   updateCart();
 }
 window.changeQty = changeQty;
@@ -240,6 +301,7 @@ function setQty(id, value) {
 
   item.qty = qty;
   saveCart();
+  emitCartChanged({ type: "qty", id: String(id) });
   updateCart();
 }
 window.setQty = setQty;
@@ -247,6 +309,7 @@ window.setQty = setQty;
 function removeItem(id) {
   cart = cart.filter(i => String(i.id) !== String(id));
   saveCart();
+  emitCartChanged({ type: "removed", id: String(id) });
   updateCart();
 }
 window.removeItem = removeItem;
@@ -312,11 +375,13 @@ function updateCart() {
 
   if (cart.length === 0) {
     cartItemsEl.innerHTML = `<p class="text-center text-gray-500 mt-10">Cart is empty</p>`;
+    // Ensure product cards / modal buttons update back to "Add to Cart"
+    emitCartChanged({ type: "render", count: 0 });
     return;
   }
 
   cartItemsEl.innerHTML = cart.map(item => `
-    <div class="flex flex-wrap gap-3 items-center border border-white/10 bg-white/5 backdrop-blur-md p-3 rounded-xl mb-3 w-full overflow-hidden shadow-sm">
+    <div class="flex flex-wrap gap-3 items-center border p-3 rounded mb-3 w-full overflow-hidden">
       <img src="${item.image || ''}" class="w-16 h-16 object-cover rounded" />
       <div class="flex-1 min-w-0">
         <h4 class="font-semibold break-words">${item.name || ''}</h4>
@@ -336,16 +401,15 @@ function updateCart() {
           <span class="text-xs text-gray-500">${Number(item.stock ?? 0) > 0 ? `/${Number(item.stock)} available` : ''}</span>
         </div>
       </div>
-      <div class="flex flex-col gap-2 items-stretch shrink-0 min-w-[120px]">
-        <button class="w-full px-3 py-2 rounded-lg text-sm font-semibold bg-yellow-400/90 hover:bg-yellow-300 text-black shadow-sm transition" onclick="buyNow('${item.id}')">
-          <i class="fa-solid fa-bag-shopping mr-2"></i>Buy
-        </button>
-        <button class="w-full px-3 py-2 rounded-lg text-sm font-semibold bg-white/10 hover:bg-white/15 border border-white/15 text-red-300 hover:text-red-200 transition" onclick="removeItem('${item.id}')">
-          <i class="fa-solid fa-trash mr-2"></i>Remove
-        </button>
+      <div class="flex flex-col gap-2 items-end shrink-0">
+        <button class="px-3 py-1 border rounded bg-black text-white text-sm" onclick="buyNow('${item.id}')">Buy</button>
+        <button class="text-red-500 text-sm" onclick="removeItem('${item.id}')">Remove</button>
       </div>
     </div>
   `).join('');
+
+  // Keep product cards / modal buttons in sync even if caller didn't emit
+  emitCartChanged({ type: "render", count });
 }
 window.updateCart = updateCart;
 

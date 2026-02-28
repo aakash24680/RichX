@@ -1,124 +1,26 @@
-/* RichX Admin - Dark Glass Theme (Tailwind override inside admin only) */
-
-:root{
-  --glass-bg: rgba(255,255,255,.06);
-  --glass-border: rgba(255,255,255,.12);
-  --glass-strong: rgba(255,255,255,.10);
-  --text: #e9edf5;
-  --muted: rgba(233,237,245,.75);
-  --accent: #f6c343; /* RichX gold */
-}
-
-body{
-  background:
-    radial-gradient(1200px 500px at 20% 0%, rgba(246,195,67,.16), transparent 60%),
-    radial-gradient(900px 500px at 90% 10%, rgba(59,130,246,.12), transparent 55%),
-    linear-gradient(180deg, #070a10 0%, #0b1020 55%, #070a10 100%);
-  color: var(--text);
-  min-height: 100vh;
-}
-
-/* Make Tailwind utility colors match dark admin */
-body.bg-gray-50{ background: transparent !important; }
-body .bg-white{ background: var(--glass-bg) !important; }
-body .border{ border-color: var(--glass-border) !important; }
-body .text-gray-900{ color: var(--text) !important; }
-body .text-gray-800{ color: var(--text) !important; }
-body .text-gray-700{ color: var(--muted) !important; }
-body .text-gray-600{ color: rgba(233,237,245,.65) !important; }
-body .text-gray-500{ color: rgba(233,237,245,.55) !important; }
-body .bg-gray-100{ background: rgba(255,255,255,.05) !important; }
-body .bg-gray-50{ background: rgba(255,255,255,.03) !important; }
-
-a{ color: inherit; }
-
-/* Tabs */
 .tab-btn{
-  border: 1px solid var(--glass-border) !important;
-  background: var(--glass-bg) !important;
-  color: var(--text) !important;
+  border: 1px solid #e5e7eb;
+  background: #fff;
   padding: 10px 16px;
   border-radius: 999px;
-  font-weight: 700;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: transform .12s ease, background .12s ease, border-color .12s ease;
-}
-.tab-btn:hover{
-  background: var(--glass-strong) !important;
-  transform: translateY(-1px);
+  font-weight: 600;
 }
 .tab-btn.active{
-  background: rgba(246,195,67,.18) !important;
-  border-color: rgba(246,195,67,.35) !important;
-  color: #fff !important;
+  background: #111;
+  color: #fff;
+  border-color: #111;
 }
 
-/* Cards/panels */
-body .rounded,
-body .rounded-lg,
-body .rounded-xl{
-  border-radius: 16px !important;
-}
-body .shadow,
-body .shadow-sm,
-body .shadow-md{
-  box-shadow: 0 16px 50px rgba(0,0,0,.35) !important;
-}
-
-/* Inputs */
-input, select, textarea{
-  background: rgba(255,255,255,.06) !important;
-  border: 1px solid var(--glass-border) !important;
-  color: var(--text) !important;
-  border-radius: 14px !important;
-}
-input::placeholder, textarea::placeholder{
-  color: rgba(233,237,245,.55) !important;
-}
-input:focus, select:focus, textarea:focus{
-  outline: none !important;
-  border-color: rgba(246,195,67,.45) !important;
-  box-shadow: 0 0 0 3px rgba(246,195,67,.15) !important;
-}
-
-/* Primary buttons */
-body button.bg-black,
-body a.bg-black{
-  background: rgba(246,195,67,.92) !important;
-  color: #151515 !important;
-  border: 1px solid rgba(246,195,67,.35) !important;
-  font-weight: 800 !important;
-}
-body button.bg-black:hover,
-body a.bg-black:hover{
-  filter: brightness(1.05);
-  transform: translateY(-1px);
-}
-
-/* Secondary buttons */
-body button.bg-white,
-body a.bg-white{
-  background: rgba(255,255,255,.08) !important;
-  border: 1px solid var(--glass-border) !important;
-  color: var(--text) !important;
-}
-body button.bg-white:hover,
-body a.bg-white:hover{
-  background: rgba(255,255,255,.12) !important;
-}
-
-/* Tables */
-table{
-  overflow: hidden;
-  border-radius: 16px;
-}
-thead tr{
+/* RichX Admin - Glass + Dark tweaks (works with Tailwind classes) */
+.tab-btn{
+  border: 1px solid rgba(255,255,255,.14) !important;
   background: rgba(255,255,255,.07) !important;
+  color: #e6e8ee !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
-tbody tr:hover{
-  background: rgba(255,255,255,.05) !important;
+.tab-btn.active{
+  background: rgba(212,175,55,.18) !important;
+  border-color: rgba(212,175,55,.55) !important;
+  color: #ffffff !important;
 }
-
-/* Little accent for Admin title */
-.text-yellow-600{ color: var(--accent) !important; }
